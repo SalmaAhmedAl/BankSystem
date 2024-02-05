@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "users")
+@Table(name = "users") //convert java class into MySql table
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
