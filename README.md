@@ -22,3 +22,17 @@ The banking app now supports name enquiry, allowing users to retrieve account ho
 ![Balance Enquiry](images/balance_enquiry.png)
 
 Additionally, users can inquire about the account balance using the accountNumber. The balance enquiry feature provides users with instant access to their account's financial status, promoting transparency and ease of use.
+
+## Credit Account
+
+### Success Scenario
+
+When successfully crediting an account, the user's account balance is updated.
+
+![Success Credit](images/success_credit.png)
+
+### Failure Scenario
+
+If the account number provided for crediting does not exist, an appropriate error response is returned, and the account balance remains unchanged.
+
+![Failed Credit](images/failed_credit.png)

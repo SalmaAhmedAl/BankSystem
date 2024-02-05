@@ -102,5 +102,34 @@ public class UserServiceImpl implements UserService{
         return fondUser.getFirstName() + " " + fondUser.getLastName() + " " + fondUser.getOtherName();
     }
 
+    @Override
+    public BankResponse creditAccount(CreditDebitRequest creditDebitRequest) {
+        boolean isAccountExist = userRepository.existsByAccountNumber(creditDebitRequest.getAccountNumber());
+        if(!isAccountExist){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+        User userToCredit = userRepository.findByAccountNumber(creditDebitRequest.getAccountNumber());
+        System.out.println("Amount to credit: " + creditDebitRequest.getAmount());
+        System.out.println("Current balance: " + userToCredit.getAccountBalance());
+
+        userToCredit.setAccountBalance(userToCredit.getAccountBalance().add(creditDebitRequest.getAmount()));
+        userRepository.save(userToCredit);
+
+        System.out.println("Updated balance: " + userToCredit.getAccountBalance());
+        return BankResponse.builder()
+                .responseCode(AccountUtils.ACCOUNT_CREDITED_SUCCESS)
+                .responseMessage(AccountUtils.ACCOUNT_CREDITED_SUCCESS_MESSAGE)
+                .accountInfo(AccountInfo.builder()
+                        .accountName(userToCredit.getFirstName() + " " + userToCredit.getLastName() + " " + userToCredit.getOtherName())
+                        .accountNumber(userToCredit.getAccountNumber())
+                        .accountBalance(userToCredit.getAccountBalance())
+                        .build())
+                .build();
+    }
+
     //balance Enquiry, name Enquiry, credit, debit[one-way transaction], transfer[two-way transaction]
 }
