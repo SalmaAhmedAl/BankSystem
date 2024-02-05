@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -139,9 +140,9 @@ public class UserServiceImpl implements UserService{
         }
         //check if the amount you intend to withdraw is not more than the current account balance
         User userToDebit = userRepository.findByAccountNumber(creditDebitRequest.getAccountNumber());
-        int availableBalance = Integer.parseInt(userToDebit.getAccountBalance().toString());
-        int debitAmount = Integer.parseInt(creditDebitRequest.getAmount().toString());
-        if(availableBalance < debitAmount){
+        BigInteger availableBalance = userToDebit.getAccountBalance().toBigInteger();
+        BigInteger debitAmount = creditDebitRequest.getAmount().toBigInteger();
+        if(availableBalance.intValue() < debitAmount.intValue()){
             return BankResponse.builder()
                     .responseCode(AccountUtils.INSUFFICIENT_BALANCE_CODE)
                     .responseMessage(AccountUtils.INSUFFICIENT_BALANCE_MESSAGE)

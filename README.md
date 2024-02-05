@@ -36,3 +36,17 @@ When successfully crediting an account, the user's account balance is updated.
 If the account number provided for crediting does not exist, an appropriate error response is returned, and the account balance remains unchanged.
 
 ![Failed Credit](images/failed_credit.png)
+
+## Debit Account
+
+### Success Scenario
+
+When successfully debiting an account, the user's account balance is updated, and an email notification is sent to the user.
+
+![Success Debit](/images/success_debit.png)
+
+### Failure Scenario - Insufficient Balance
+
+If the account does not have sufficient balance for the requested debit amount, an appropriate error response is returned, and the account balance remains unchanged.
+
+![Failed Debit - Insufficient Balance](/images/failed_debit.png)
