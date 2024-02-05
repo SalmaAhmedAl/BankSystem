@@ -113,13 +113,9 @@ public class UserServiceImpl implements UserService{
                     .build();
         }
         User userToCredit = userRepository.findByAccountNumber(creditDebitRequest.getAccountNumber());
-        System.out.println("Amount to credit: " + creditDebitRequest.getAmount());
-        System.out.println("Current balance: " + userToCredit.getAccountBalance());
-
         userToCredit.setAccountBalance(userToCredit.getAccountBalance().add(creditDebitRequest.getAmount()));
         userRepository.save(userToCredit);
 
-        System.out.println("Updated balance: " + userToCredit.getAccountBalance());
         return BankResponse.builder()
                 .responseCode(AccountUtils.ACCOUNT_CREDITED_SUCCESS)
                 .responseMessage(AccountUtils.ACCOUNT_CREDITED_SUCCESS_MESSAGE)
@@ -129,6 +125,42 @@ public class UserServiceImpl implements UserService{
                         .accountBalance(userToCredit.getAccountBalance())
                         .build())
                 .build();
+    }
+
+    @Override
+    public BankResponse debitAccount(CreditDebitRequest creditDebitRequest) {
+        boolean isAccountExist = userRepository.existsByAccountNumber(creditDebitRequest.getAccountNumber());
+        if(!isAccountExist){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+        //check if the amount you intend to withdraw is not more than the current account balance
+        User userToDebit = userRepository.findByAccountNumber(creditDebitRequest.getAccountNumber());
+        int availableBalance = Integer.parseInt(userToDebit.getAccountBalance().toString());
+        int debitAmount = Integer.parseInt(creditDebitRequest.getAmount().toString());
+        if(availableBalance < debitAmount){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.INSUFFICIENT_BALANCE_CODE)
+                    .responseMessage(AccountUtils.INSUFFICIENT_BALANCE_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+        else{
+            userToDebit.setAccountBalance(userToDebit.getAccountBalance().subtract(creditDebitRequest.getAmount()));
+            userRepository.save(userToDebit);
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_DEBITED_SUCCESS)
+                    .responseMessage(AccountUtils.ACCOUNT_DEBITED_MESSAGE)
+                    .accountInfo(AccountInfo.builder()
+                            .accountNumber(creditDebitRequest.getAccountNumber())
+                            .accountName(userToDebit.getFirstName() + " " + userToDebit.getLastName() + " " + userToDebit.getOtherName())
+                            .accountBalance(userToDebit.getAccountBalance())
+                            .build())
+                    .build();
+        }
     }
 
     //balance Enquiry, name Enquiry, credit, debit[one-way transaction], transfer[two-way transaction]
