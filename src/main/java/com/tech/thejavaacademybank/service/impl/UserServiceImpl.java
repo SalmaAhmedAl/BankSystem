@@ -1,9 +1,6 @@
 package com.tech.thejavaacademybank.service.impl;
 
-import com.tech.thejavaacademybank.dto.AccountInfo;
-import com.tech.thejavaacademybank.dto.BankResponse;
-import com.tech.thejavaacademybank.dto.EmailDetails;
-import com.tech.thejavaacademybank.dto.UserRequest;
+import com.tech.thejavaacademybank.dto.*;
 import com.tech.thejavaacademybank.entity.User;
 import com.tech.thejavaacademybank.repository.UserRepository;
 import com.tech.thejavaacademybank.utils.AccountUtils;
@@ -70,4 +67,40 @@ public class UserServiceImpl implements UserService{
             .build();
 
     }
+
+    @Override
+    public BankResponse balanceEnquiry(EnquiryRequest enquiryRequest) {
+        //check if the provided account number exists
+        boolean isAccountExist = userRepository.existsByAccountNumber(enquiryRequest.getAccountNumber());
+        if(!isAccountExist){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+        User fondUser = userRepository.findByAccountNumber(enquiryRequest.getAccountNumber());
+        return BankResponse.builder()
+                .responseCode(AccountUtils.ACCOUNT_FOUND_CODE)
+                .responseMessage(AccountUtils.ACCOUNT_FOUND_MESSAGE)
+                .accountInfo(AccountInfo.builder()
+                        .accountBalance(fondUser.getAccountBalance())
+                        .accountNumber(enquiryRequest.getAccountNumber())
+                        .accountName(fondUser.getFirstName() + " " + fondUser.getLastName() + " " + fondUser.getOtherName())
+                        .build())
+                .build();
+    }
+
+    @Override
+    public String nameEnquiry(EnquiryRequest enquiryRequest) {
+        //check if the provided account number exists
+        boolean isAccountExist = userRepository.existsByAccountNumber(enquiryRequest.getAccountNumber());
+        if(!isAccountExist){
+            return AccountUtils.ACCOUNT_NOT_EXIST_MESSAGE;
+        }
+        User fondUser = userRepository.findByAccountNumber(enquiryRequest.getAccountNumber());
+        return fondUser.getFirstName() + " " + fondUser.getLastName() + " " + fondUser.getOtherName();
+    }
+
+    //balance Enquiry, name Enquiry, credit, debit[one-way transaction], transfer[two-way transaction]
 }
