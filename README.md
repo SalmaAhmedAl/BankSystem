@@ -50,3 +50,21 @@ When successfully debiting an account, the user's account balance is updated, an
 If the account does not have sufficient balance for the requested debit amount, an appropriate error response is returned, and the account balance remains unchanged.
 
 ![Failed Debit - Insufficient Balance](/images/failed_debit.png)
+
+## Transfer Service
+
+### Success Scenario
+
+The transfer service allows for a seamless transfer of funds by simultaneously crediting the destination account and debiting the source account. Two email notifications are sent, one to notify the debit account holder and another to notify the credit account holder.
+
+#### MySQL Update
+
+After a successful transfer, the MySQL database is updated with the new balances for both accounts.
+
+![Success Transfer - MySQL Update](/images/success_transfer.png)
+
+#### Email Alerts
+
+Both the debit and credit account holders receive email notifications confirming the successful transfer.
+
+![Success Transfer - Email Alerts](/images/transfer_alerts.png)
