@@ -68,3 +68,14 @@ After a successful transfer, the MySQL database is updated with the new balances
 Both the debit and credit account holders receive email notifications confirming the successful transfer.
 
 ![Success Transfer - Email Alerts](/images/transfer_alerts.png)
+
+## API Documentation
+
+Explore and test the User Account Management APIs using Swagger documentation. The APIs provide functionalities such as creating a new user account, checking account balance, performing credit and debit transactions, and transferring funds.
+
+### Access Swagger UI
+
+To access the Swagger UI for API documentation, navigate to the following URL:
+
+```plaintext
+http://http://localhost:8081//swagger-ui.html#/
