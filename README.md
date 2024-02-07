@@ -79,3 +79,15 @@ To access the Swagger UI for API documentation, navigate to the following URL:
 
 ```plaintext
 http://http://localhost:8081//swagger-ui.html#/
+```
+
+## Transaction Logging
+
+All transactions are now systematically logged using the Transaction Entity. This includes credit, debit, and transfer transactions. Explore the `Transaction` entity to review the details of each transaction.
+
+### Transaction Entity Details
+
+The `Transaction` entity captures essential information about each transaction, such as transaction type, amount, and the associated user accounts. This enhanced logging ensures a comprehensive record of all financial activities within the system.
+
+![Transaction Logging](images/success_transaction.png)
+
